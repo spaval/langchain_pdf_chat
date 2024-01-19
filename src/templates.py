@@ -13,8 +13,8 @@ css = '''
   width: 20%;
 }
 .chat-message .avatar img {
-  max-width: 78px;
-  max-height: 78px;
+  max-width: 24px;
+  max-height: 24px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -28,7 +28,7 @@ css = '''
 bot_template = '''
 <div class="chat-message bot">
     <div class="avatar">
-        <img src="./assets/imgs/bot.png">
+        <img src="https://firebasestorage.googleapis.com/v0/b/bongga-248c4.appspot.com/o/assets%2Fimages%2Fbot.png?alt=media&token=777401a1-9286-41ee-ab97-c757824d07a5" alt='Bot' />
     </div>
     <div class="message">{{message}}</div>
 </div>
@@ -37,7 +37,7 @@ bot_template = '''
 user_template = '''
 <div class="chat-message user">
     <div class="avatar">
-        <img src="./assets/imgs/user.png">
+        <img src="https://firebasestorage.googleapis.com/v0/b/bongga-248c4.appspot.com/o/assets%2Fimages%2Fuser.png?alt=media&token=e080e6c3-10ae-450c-ab17-23d00b671bef" alt='User' />
     </div>    
     <div class="message">{{message}}</div>
 </div>

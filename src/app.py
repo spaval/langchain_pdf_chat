@@ -6,8 +6,6 @@ from langchain.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
-from langchain.embeddings import HuggingFaceInstructEmbeddings
-from langchain.llms import HuggingFaceHub
 from src.templates import css, user_template, bot_template
 
 class ResidentialAssistant:
@@ -19,7 +17,7 @@ class ResidentialAssistant:
         load_dotenv()
 
     def setup_ui(self):
-        st.set_page_config(page_title="Asistente Unidad Residencial Origen", page_icon="🏢")
+        st.set_page_config(page_title="Origen P.H.", page_icon="🏢")
         st.write(css, unsafe_allow_html=True)
 
         if "conversation" not in st.session_state:
@@ -28,14 +26,14 @@ class ResidentialAssistant:
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = None
 
-        st.header("Conoce todo sobre tu Unidad Residencial Origen")
+        st.header("Asistente Unidad Residencial Origen")
         question = st.text_input("¿Qué deseas saber?")
         if question:
             self.handle_user_input(question)
 
         with st.sidebar:
-            st.subheader("Tus Documentos")
-            docs = st.file_uploader("Sube tus documentos", accept_multiple_files=True)
+            st.subheader("Documentos")
+            docs = st.file_uploader("Sube tus documentos para proveer de contexto a tu asistente", accept_multiple_files=True)
             
             if st.button("Adjuntar"):
                 with st.spinner("Procesando..."):
@@ -67,16 +65,14 @@ class ResidentialAssistant:
         return chunks
     
     def get_vector_store_index(self, documents_chunks):
-        #embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-        embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
+        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         vector_store = FAISS.from_texts(documents_chunks, embeddings)
 
         return vector_store
     
 
     def get_conversation(self, vector_store_index):
-        #llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.9)
-        llm = HuggingFaceHub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature":0.5, "max_length":512})
+        llm = ChatGoogleGenerativeAI(model="gemini-pro", convert_system_message_to_human=True, temperature=0.7)
         memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
         conversation_chain = ConversationalRetrievalChain.from_llm(
