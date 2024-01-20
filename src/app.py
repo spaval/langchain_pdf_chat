@@ -4,7 +4,9 @@ from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+from langchain.embeddings import OpenAIEmbeddings
 from langchain.memory import ConversationBufferMemory
+from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from src.templates import css, user_template, bot_template
 
@@ -65,14 +67,16 @@ class ResidentialAssistant:
         return chunks
     
     def get_vector_store_index(self, documents_chunks):
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        #embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        embeddings = OpenAIEmbeddings()
         vector_store = FAISS.from_texts(documents_chunks, embeddings)
 
         return vector_store
     
 
     def get_conversation(self, vector_store_index):
-        llm = ChatGoogleGenerativeAI(model="gemini-pro", convert_system_message_to_human=True, temperature=0.7)
+        #llm = ChatGoogleGenerativeAI(model="gemini-pro", convert_system_message_to_human=True, temperature=0.7)
+        llm = ChatOpenAI()
         memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
         conversation_chain = ConversationalRetrievalChain.from_llm(
